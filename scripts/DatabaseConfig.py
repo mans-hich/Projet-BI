@@ -1,41 +1,51 @@
-# config.py
 import pyodbc
 import pandas as pd
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 import warnings
-warnings.filterwarnings('ignore')
-from connect import connect_sql_server, connect_data_werehouse
+
+warnings.filterwarnings("ignore")
+
 
 class DatabaseConfig:
-    # Configuration SQL Server Northwind (source)
-    SQL_SERVER = pyodbc.connect(
-        'DRIVER={SQL Server};'
-        'SERVER=DESKTOP-PT9IUSD\\MYSERVERR;'  
-        'DATABASE=Northwind;' #Northwind
-        'Trusted_Connection=yes;'
+    SERVER = "DIDI\\SQLEXPRESS"
+    SRC_DB = "Northwind"
+    DWH_DB = "Dw"
+    ACCESS_PATH = r"C:/Users/hicha/SPACE/9RAYA/bizb/Projet-BI/data/access/Nw.accdb"
+
+
+def build_connection(db_name):
+    conn_str = (
+        "DRIVER={SQL Server};"
+        f"SERVER={DatabaseConfig.SERVER};"
+        f"DATABASE={db_name};"
+        "Trusted_Connection=yes;"
     )
-    
-    # Configuration SQL Server Data Warehouse (destination)
-    DW_SERVER = {
-        'driver': '{SQL Server}',
-        'server': 'DESKTOP-PT9IUSD\\MYSERVERR;',  # À adapter
-        'database': 'NEWW',
-        'trusted_connection': 'yes'
-    }
-    
-    # Configuration Access (si nécessaire)
-    ACCESS_DB_PATH = r'C:\\Users\\WINDOWS\\Desktop\\maybe\\data\\Northwind 2012.accdb'  # À adapter
+    return conn_str
 
-def create_sql_connection():
-    """Crée une connexion pyodbc à SQL Server"""
-    return connect_sql_server()
 
-def create_datawere_connection():
-    return connect_data_werehouse()
+def connect_to_database(db_name):
+    try:
+        connection = pyodbc.connect(build_connection(db_name))
+        print(f"✅ Successfully connected to [{db_name}]")
+        return connection
+    except Exception as err:
+        print(f"❌ Connection error on [{db_name}]: {err}")
+        return None
 
-def create_sqlalchemy_engine(config_dict):
-    """Crée un engine SQLAlchemy"""
-    conn_str = f"mssql+pyodbc://DESKTOP-PT9IUSD\\MYSERVERR/NEWW?" \
-               f"driver=SQL+Server&trusted_connection=yes"
-    return create_engine(conn_str) 
 
+def validate_connections():
+    print("Testing source database connection...")
+    source_conn = connect_to_database(DatabaseConfig.SRC_DB)
+    if source_conn:
+        source_conn.close()
+        print("Source database: PASSED")
+
+    print("\nTesting data warehouse connection...")
+    warehouse_conn = connect_to_database(DatabaseConfig.DWH_DB)
+    if warehouse_conn:
+        warehouse_conn.close()
+        print("Data warehouse: PASSED")
+
+
+if __name__ == "__main__":
+    validate_connections()
