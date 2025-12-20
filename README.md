@@ -18,17 +18,17 @@ Northwind-BI-Project/
 
 | └──access/
 
-|   ├──Nw.accdb
+|       ├──Nw.accdb
 
 | └── excel/
 
-│   ├── Customers.xlsx
+│       ├── Customers.xlsx
 
-│   ├── Employees.xlsx
+│       ├── Employees.xlsx
 
-│   ├── Orders.xlsx
+│       ├── Orders.xlsx
 
-│   └── etc
+│    └── etc
 
 │
 

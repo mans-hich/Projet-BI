@@ -1,11 +1,11 @@
 import pandas as pd
 import numpy as np
 import pyodbc
-from DatabaseConfig import DatabaseConfig, connect_sql_server, connect_data_warehouse
+from DatabaseConfig import DatabaseConfig, connect_to_database, validate_connections
 import create_datawarehouse
 
 
-class DataIntegrationPipeline:
+class etl:
 
     def __init__(self):
         print("=" * 50)
@@ -14,7 +14,8 @@ class DataIntegrationPipeline:
 
         # Establish connection to operational database
         print("\n1. Connecting to operational SQL database...")
-        self.source_connection = connect_sql_server()
+        self.source_connection = connect_to_database(DatabaseConfig.SOURCE_DATABASE)
+        self.target_connection = connect_to_database(DatabaseConfig.TARGET_DATABASE)
 
         if self.source_connection is None:
             raise Exception("Connection failed: Operational database unreachable")
@@ -36,7 +37,7 @@ class DataIntegrationPipeline:
 
         # Connect to data warehouse
         print("\n3. Connecting to data warehouse...")
-        self.warehouse_connection = connect_data_warehouse()
+        self.warehouse_connection = validate_connections()
 
         if self.warehouse_connection is None:
             raise Exception("Connection failed: Data warehouse unreachable")
@@ -1345,7 +1346,7 @@ if __name__ == "__main__":
         print("🚀 INITIATING DATA INTEGRATION PIPELINE")
         print("=" * 50)
 
-        integration_pipeline = DataIntegrationPipeline()
+        integration_pipeline = etl()
         integration_pipeline.execute_full_pipeline()
 
     except Exception as e:

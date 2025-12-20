@@ -1,3 +1,4 @@
+#databaseconfig.py
 import pyodbc
 import pandas as pd
 from sqlalchemy import create_engine, text
@@ -7,16 +8,17 @@ warnings.filterwarnings("ignore")
 
 
 class DatabaseConfig:
-    SERVER = "DIDI\\SQLEXPRESS"
-    SRC_DB = "Northwind"
-    DWH_DB = "Dw"
+    SQL_SERVER_INSTANCE = "DIDI\\SQLEXPRESS"
+    SOURCE_DATABASE = "Northwind"
+    TARGET_DATABASE = "Dw"
     ACCESS_PATH = r"C:/Users/hicha/SPACE/9RAYA/bizb/Projet-BI/data/access/Nw.accdb"
+
 
 
 def build_connection(db_name):
     conn_str = (
         "DRIVER={SQL Server};"
-        f"SERVER={DatabaseConfig.SERVER};"
+        f"SERVER={DatabaseConfig.SQL_SERVER_INSTANCE};"
         f"DATABASE={db_name};"
         "Trusted_Connection=yes;"
     )
@@ -35,13 +37,13 @@ def connect_to_database(db_name):
 
 def validate_connections():
     print("Testing source database connection...")
-    source_conn = connect_to_database(DatabaseConfig.SRC_DB)
+    source_conn = connect_to_database(DatabaseConfig.SOURCE_DATABASE)
     if source_conn:
         source_conn.close()
         print("Source database: PASSED")
 
     print("\nTesting data warehouse connection...")
-    warehouse_conn = connect_to_database(DatabaseConfig.DWH_DB)
+    warehouse_conn = connect_to_database(DatabaseConfig.TARGET_DATABASE)
     if warehouse_conn:
         warehouse_conn.close()
         print("Data warehouse: PASSED")

@@ -111,8 +111,8 @@ st.markdown("""
 def get_dw_connection():
     """Connect to the Data Warehouse."""
     try:
-        from DatabaseConfig import connect_data_warehouse
-        connection = connect_data_warehouse()
+        from DatabaseConfig import connect_to_database
+        connection = connect_to_database()
         return connection
     except Exception as e:
         st.error(f"Connection failed: {e}")

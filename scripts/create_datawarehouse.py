@@ -9,7 +9,8 @@ def init_datawarehouse():
             f"DRIVER={{SQL Server}};"
             f"SERVER={DatabaseConfig.SQL_SERVER_INSTANCE};"
             "DATABASE=master;"
-            "Trusted_Connection=yes;"
+            "Trusted_Connection=yes;",
+            autocommit=True
         )
         cur = connection.cursor()
 
